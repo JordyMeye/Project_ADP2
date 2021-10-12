@@ -10,18 +10,27 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import za.ac.cput.login.connection.db_connection;
+import za.ac.cput.login.dao.DAOConnection;
+import za.ac.cput.login.user.admin.Admin;
+import za.ac.cput.login.user.admin.User;
 
 /**
  *
  * @author User
  */
-public class AdminGui extends JFrame implements ActionListener{
+public class AdminGui extends JFrame implements ActionListener, ItemListener {
     
     private JFrame mainframe2;
     
@@ -35,6 +44,7 @@ public class AdminGui extends JFrame implements ActionListener{
             
             private JButton btnadd;
     
+            private DAOConnection duo;
     
     public AdminGui (){
         
@@ -79,6 +89,19 @@ public class AdminGui extends JFrame implements ActionListener{
     
 
 }
+    
+     public boolean CreateConnection(){
+    
+   try {
+            duo= new DAOConnection();
+            return true;
+        } catch (SQLException ex) {
+            
+            Logger.getLogger(AdminGui.class.getName()).log(Level.SEVERE, null, ex);
+            
+        }
+   return false;
+    }
     public void setGui(){
     
         panelcenter.setLayout( new GridLayout (7,2));
@@ -115,7 +138,7 @@ public class AdminGui extends JFrame implements ActionListener{
    
    btnadd.addActionListener(this);
          
-        
+            
     
     }
     
@@ -128,9 +151,99 @@ public class AdminGui extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+       /** if (e.getSource() == btnadd){
+           
+            
+            if( CreateConnection()){
+                //duo.save(ad);
+                txtname.setText("");
+                txtlocation.setText("");
+                
+                txtcost.setText("");
+                txtmax.setText("");
+                txtavailab.setText("");
+                txtdate.setText("");
+                
+                
+                JOptionPane.showMessageDialog(null, "Item inserted successfully","Success",JOptionPane.PLAIN_MESSAGE);
+            }
+        
+        
+        }
+*/ 
+        
+}
+
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        
+        if (e.getSource() == btnadd){
+        //ctype.getSelectedItem().toString();
+        
+        
+         //if (e.getSource() == ctype) {
+
+            // We must check that the combobox is not null and that we selected a valid item
+            if (ctype.getSelectedItem() != null && !ctype.getSelectedItem().equals("-no-selection-made-")) {
+
+                // Now we use the getOne method from the database to return a single vehicle object to work with
+                Admin v = new db_connection().getOne(ctype.getSelectedItem().toString());
+
+                // We set each text field to the corresponding value in our vehicle object
+                txtname.setEnabled(true);
+                txtname.setText(v.getName());
+
+                txtlocation.setEnabled(true);
+                txtlocation.setText(v.getLocation());
+
+                txtcost.setEnabled(true);
+                txtcost.setText(v.getCost());
+
+                
+                
+                txtavailab.setEnabled(true);
+                txtavailab.setText(v.getAvailability());
+                
+                txtdate.setEnabled(true);
+                txtdate.setText(v.getDate());
+
+                
+            } else {
+
+                // If our combobox is null or we dont have a valid selection, we return the form to its disabled state
+                resetForm();
+            }
+
+
+
+
+        }
+        
+        }
+
+    private void resetForm() {
+        
+        txtname.setEnabled(true);
+                txtname.setText("");
+
+                txtlocation.setEnabled(true);
+                txtlocation.setText("");
+
+                txtcost.setEnabled(true);
+                txtcost.setText("");
+
+                
+                
+                txtavailab.setEnabled(true);
+                txtavailab.setText("");
+                
+                txtdate.setEnabled(true);
+                txtdate.setText("");
+    }
     }
 
 
     
-}
+
