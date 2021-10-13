@@ -28,7 +28,7 @@ public class UserGui implements ActionListener{
     private JPanel panelcenter , panelsouth;
     private JLabel lblid, lblname, lblsurname , lblemail;
     private JTextField txtid, txtname, txtsurname, txtemail;
-    private JButton btngo;
+    private JButton btngo , btnupdate, btnexit;
     
      private DAOConnection dao;
     
@@ -47,7 +47,9 @@ public class UserGui implements ActionListener{
         txtemail = new JTextField();
         
         btngo= new JButton ("Goo");
-                
+        btnupdate= new JButton("Update");
+    btnexit=new JButton("Exit");
+    
         mainframe3.setSize(500,250);
  mainframe3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     mainframe3.setVisible(true);
@@ -72,7 +74,7 @@ public class UserGui implements ActionListener{
     public void setGui(){
     
         panelcenter.setLayout( new GridLayout (4,2));
-        panelsouth.setLayout ( new GridLayout (1,2));
+        panelsouth.setLayout ( new GridLayout (1,3));
         
         panelcenter.add(lblid);
         panelcenter.add(txtid);
@@ -87,14 +89,16 @@ public class UserGui implements ActionListener{
         panelcenter.add(txtemail);
         
         panelsouth.add(btngo);
-        
+        panelsouth.add(btnupdate);
+        panelsouth.add(btnexit);
         
         mainframe3.add(panelcenter, BorderLayout.CENTER);
    mainframe3.add(panelsouth, BorderLayout.SOUTH);
    
    
    btngo.addActionListener(this);
-    
+   btnupdate.addActionListener(this);
+    btnexit.addActionListener(this);
     
     }
  public void btngoActionPerformed(java.awt.event.ActionEvent e) throws SQLException {                                     
@@ -118,7 +122,7 @@ public class UserGui implements ActionListener{
                    txtemail.setText("");
                    
                    
-                   JOptionPane.showMessageDialog(null, "Item inserted successfully","Success",JOptionPane.PLAIN_MESSAGE);
+                   JOptionPane.showMessageDialog(null, "User added successfully","Success",JOptionPane.PLAIN_MESSAGE);
                }
                 
             } catch (SQLException ex) {
@@ -126,9 +130,31 @@ public class UserGui implements ActionListener{
             }
         
         
-        }
+        }if (e.getSource() ==btnexit){
+        
+            if ("".equals(txtid.getText())){
+                JOptionPane.showMessageDialog(null, "Please enter a number before exiting","Erorr",JOptionPane.ERROR_MESSAGE);
+            } else {
+                if( CreateConnection()){
+                    dao.deleteUser(Integer.parseInt(txtid.getText()));
+                    txtid.setText("");
+                    JOptionPane.showMessageDialog(null, "user left successfully","Success",JOptionPane.PLAIN_MESSAGE);
+                }
+            }
          
-    }
+        if (e.getSource() == btnupdate){
+        
+            if( CreateConnection()){
+                dao.deleteUser(Integer.parseInt(txtid.getText()));
+                txtid.setText("");
+                JOptionPane.showMessageDialog(null, "user updated successfully","Success",JOptionPane.PLAIN_MESSAGE);
+            
+            
+            }}}}
+        
+        
+        
+    
     
     public static void main(String[] args) {
         new UserGui().setGui();
